@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
 <title>QR Strobe</title>
 <style>
   :root {
@@ -315,12 +316,12 @@
     <span></span><span></span><span></span><span></span>
   </div>
   <h1>QR Strobe</h1>
-  <span>optical · offline</span>
+  <span>optical · airgap</span>
 </header>
 
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('send')">📤 送信</button>
-  <button class="tab" onclick="switchTab('recv')">📥 受信</button>
+  <button class="tab active" onclick="switchTab('send')">📤 Send</button>
+  <button class="tab" onclick="switchTab('recv')">📥 Receive</button>
 </div>
 
 <!-- SEND PANEL -->
@@ -328,8 +329,8 @@
   <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
     <input type="file" id="fileInput" accept="*">
     <div class="drop-icon">📁</div>
-    <strong>ファイルを選択</strong>
-    <p>タップして選択、またはドラッグ&ドロップ<br>任意のファイルに対応</p>
+    <strong>Select a file</strong>
+    <p>Tap to select, or drag &amp; drop<br>Any file type supported</p>
   </div>
 
   <div class="file-info" id="fileInfo">
@@ -339,37 +340,37 @@
 
   <div class="controls">
     <div class="slider-row">
-      <label>フレーム速度</label>
+      <label>Frame Rate</label>
       <input type="range" id="fpsSlider" min="1" max="60" value="10" oninput="updateSliders(); updateFps();">
       <span class="val" id="fpsVal">10 fps</span>
     </div>
     <div class="slider-row">
-      <label>チャンクサイズ</label>
+      <label>Chunk Size</label>
       <input type="range" id="chunkSlider" min="50" max="2000" step="50" value="300" oninput="updateSliders()">
       <span class="val" id="chunkVal">300 B</span>
     </div>
     <div class="slider-row">
-      <label>QRサイズ</label>
+      <label>QR Size</label>
       <input type="range" id="qrSizeSlider" min="400" max="1200" step="100" value="500" oninput="updateQRSize()">
       <span class="val" id="qrSizeVal">500px</span>
     </div>
     <div class="slider-row">
-      <label>方式</label>
+      <label>Mode</label>
       <input type="checkbox" id="fountainToggle" onchange="updateEstimate()" style="flex:none;">
-      <span class="val" style="text-align:left;flex:1;">ファウンテンモード(実験的)</span>
+      <span class="val" style="text-align:left;flex:1;">Fountain mode (experimental)</span>
     </div>
     <div class="slider-row">
-      <label>圧縮</label>
+      <label>Compress</label>
       <input type="checkbox" id="compressToggle" onchange="updateCompressionPreview()" style="flex:none;">
-      <span class="val" style="text-align:left;flex:1;">送信前にgzip圧縮する</span>
+      <span class="val" style="text-align:left;flex:1;">gzip-compress before sending</span>
     </div>
   </div>
 
   <div id="compressionInfo" style="margin:8px 20px 0;font-family:'Courier New',monospace;font-size:11px;color:#6b6b80;min-height:14px;"></div>
   <div id="estimateInfo" style="margin:0 20px 0;font-family:'Courier New',monospace;font-size:11px;color:#6b6b80;min-height:14px;"></div>
 
-  <button class="btn btn-primary" id="startBtn" onclick="startSend()" disabled>送信開始</button>
-  <button class="btn btn-stop" id="stopBtn" onclick="stopSend()">停止</button>
+  <button class="btn btn-primary" id="startBtn" onclick="startSend()" disabled>Start</button>
+  <button class="btn btn-stop" id="stopBtn" onclick="stopSend()">Stop</button>
 
   <div class="qr-display" id="qrDisplay">
     <canvas id="qrCanvas" width="500" height="500" style="width:100%;max-width:500px;display:block;margin:0 auto;background:#fff;"></canvas>
@@ -379,9 +380,9 @@
       <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
     </div>
     <div class="frame-info" id="frameInfo" style="display:flex;align-items:center;gap:8px;justify-content:center;">
-      <span>フレーム <strong id="frameNum">—</strong> / <span id="frameTot">—</span></span>
+      <span>Frame <strong id="frameNum">—</strong> / <span id="frameTot">—</span></span>
       <button id="pauseBtn" onclick="togglePause()" style="background:#4fffb0;color:#000;border:none;border-radius:4px;padding:2px 8px;font-size:11px;cursor:pointer;">⏸</button>
-      <input id="frameJump" type="number" min="1" style="width:52px;font-size:11px;padding:2px 4px;background:#1e1e2e;color:#4fffb0;border:1px solid #4fffb0;border-radius:4px;" placeholder="番号" onkeydown="if(event.key==='Enter'){jumpToFrame();}">
+      <input id="frameJump" type="number" min="1" style="width:52px;font-size:11px;padding:2px 4px;background:#1e1e2e;color:#4fffb0;border:1px solid #4fffb0;border-radius:4px;" placeholder="No." onkeydown="if(event.key==='Enter'){jumpToFrame();}">
       <button onclick="jumpToFrame()" style="background:none;color:#4fffb0;border:1px solid #4fffb0;border-radius:4px;padding:2px 6px;font-size:11px;cursor:pointer;">→</button>
     </div>
   </div>
@@ -397,19 +398,19 @@
 
     <div class="recv-status">
       <div class="status-row">
-        <span class="status-label">受信フレーム</span>
+        <span class="status-label">Received</span>
         <span class="status-val" id="recvCount">0 / —</span>
       </div>
       <div class="status-row">
-        <span class="status-label">ファイル名</span>
+        <span class="status-label">Filename</span>
         <span class="status-val" id="recvName">—</span>
       </div>
       <div class="status-row">
-        <span class="status-label">転送速度</span>
+        <span class="status-label">Speed</span>
         <span class="status-val" id="recvSpeed">—</span>
       </div>
       <div class="status-row">
-        <span class="status-label">実測スキャン</span>
+        <span class="status-label">Scan Rate</span>
         <span class="status-val" id="scanIntervalVal">— fps</span>
       </div>
       <div id="scanDebug" style="font-family:monospace;font-size:10px;color:#6b6b80;min-height:14px;"></div>
@@ -418,17 +419,17 @@
     </div>
 
     <div class="slider-row" id="zoomControl" style="display:none;">
-      <label>ズーム</label>
+      <label>Zoom</label>
       <input type="range" id="zoomSlider">
       <span class="val" id="zoomVal">—</span>
     </div>
 
-    <div id="recvCompleteMsg" style="display:none;font-size:11px;color:var(--accent);text-align:center;padding:4px 0;">✅ 受信完了</div>
+    <div id="recvCompleteMsg" style="display:none;font-size:11px;color:var(--accent);text-align:center;padding:4px 0;">&#9989; Received</div>
 
-    <button class="btn btn-recv" id="recvBtn" onclick="startRecv()">カメラ開始</button>
-    <button class="btn" id="stopRecvBtn" onclick="resetRecv()" style="display:none; background:var(--surface); border:1px solid var(--danger); color:var(--danger); margin-top:4px;">■ 中断</button>
-    <button class="btn btn-save" id="saveBtn" onclick="saveFile()">💾 ファイルを保存</button>
-    <button class="btn" id="resetBtn" onclick="resetRecv()" style="display:none; background:var(--surface); border:1px solid var(--muted); color:var(--muted); margin-top:4px;">↩ リセット / 再スキャン</button>
+    <button class="btn btn-recv" id="recvBtn" onclick="startRecv()">Start Camera</button>
+    <button class="btn" id="stopRecvBtn" onclick="resetRecv()" style="display:none; background:var(--surface); border:1px solid var(--danger); color:var(--danger); margin-top:4px;">&#9632; Stop</button>
+    <button class="btn btn-save" id="saveBtn" onclick="saveFile()">&#128190; Save File</button>
+    <button class="btn" id="resetBtn" onclick="resetRecv()" style="display:none; background:var(--surface); border:1px solid var(--muted); color:var(--muted); margin-top:4px;">&#8617; Reset / Rescan</button>
   </div>
 </div>
 
@@ -2881,11 +2882,11 @@ async function updateCompressionPreview() {
   if (!fileData) { el.textContent = ''; return; }
   if (!document.getElementById('compressToggle').checked) { el.textContent = ''; return; }
   if (typeof CompressionStream === 'undefined') {
-    el.textContent = '⚠️この端末/ブラウザは圧縮に対応していません';
+    el.textContent = '⚠️ This browser/device does not support compression';
     el.style.color = '#ff5f7e';
     return;
   }
-  el.textContent = '圧縮率を計算中…';
+  el.textContent = 'Estimating compression…';
   el.style.color = '#6b6b80';
   try {
     const compressed = await gzipCompress(fileData);
@@ -2893,14 +2894,14 @@ async function updateCompressionPreview() {
     const compSize = compressed.length;
     const pct = ((1 - compSize / origSize) * 100).toFixed(0);
     if (compSize < origSize) {
-      el.textContent = `圧縮後: ${formatSize(compSize)}（${formatSize(origSize)}から${pct}%削減）`;
+      el.textContent = `Compressed: ${formatSize(compSize)} (${pct}% smaller than ${formatSize(origSize)})`;
       el.style.color = '#4fffb0';
     } else {
-      el.textContent = `圧縮後: ${formatSize(compSize)}（${formatSize(origSize)}より増加、圧縮しない方が良い）`;
+      el.textContent = `Compressed: ${formatSize(compSize)} (larger than ${formatSize(origSize)} — skip compression)`;
       el.style.color = '#ff5f7e';
     }
   } catch (e) {
-    el.textContent = '圧縮率の計算に失敗しました: ' + e.message;
+    el.textContent = 'Failed to estimate compression: ' + e.message;
     el.style.color = '#ff5f7e';
   }
 }
@@ -2980,7 +2981,7 @@ function updateEstimate() {
   if (document.getElementById('fountainToggle').checked) {
     const estFrames = Math.ceil(totalChunks * 1.3); // BP+GEなら大体10〜30%増しで完了する目安
     const loopSeconds = estFrames / fps;
-    el.textContent = `ブロック数: ${totalChunks}個 / 完了目安 約${estFrames}枚(${loopSeconds.toFixed(0)}秒)・順不同で受信可`;
+    el.textContent = `Blocks: ${totalChunks} / est. ${estFrames} frames to finish (${loopSeconds.toFixed(0)}s) — any order`;
     return;
   }
 
@@ -2988,8 +2989,8 @@ function updateEstimate() {
   const loopSeconds = totalFrames / fps;
   const mins = Math.floor(loopSeconds / 60);
   const secs = Math.round(loopSeconds % 60);
-  const timeStr = mins > 0 ? `${mins}分${secs}秒` : `${secs}秒`;
-  el.textContent = `推定フレーム数: ${totalFrames}枚 / 1周あたり約${timeStr}`;
+  const timeStr = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+  el.textContent = `Est. frames: ${totalFrames} / ~${timeStr} per loop`;
 }
 
 function updateFps() {
@@ -3197,7 +3198,7 @@ function drawFountainFrame() {
     }
   }
   document.getElementById('frameNum').textContent = fountainDropletCount;
-  document.getElementById('frameTot').textContent = `∞ (目安${Math.ceil(fountainK * 1.3)})`;
+  document.getElementById('frameTot').textContent = `∞ (~${Math.ceil(fountainK * 1.3)})`;
 }
 
 async function startSend() {
@@ -3212,14 +3213,14 @@ async function startSend() {
   const startBtn = document.getElementById('startBtn');
   startBtn.disabled = true;
   const origBtnText = startBtn.textContent;
-  if (document.getElementById('compressToggle').checked) startBtn.textContent = '圧縮中…';
+  if (document.getElementById('compressToggle').checked) startBtn.textContent = 'Compressing…';
 
   if (fountainMode) {
     await buildFountainBlocks();
     startBtn.disabled = false;
     startBtn.textContent = origBtnText;
     if (fountainK > MAX_TOTAL_FRAMES) {
-      showToast(`ブロック数が多すぎます(${fountainK}個)。チャンクサイズを上げてください。`, 4000);
+      showToast(`Too many blocks (${fountainK}). Increase the chunk size.`, 4000);
       return;
     }
     document.getElementById('progressBarWrap').style.display = 'none';
@@ -3230,7 +3231,7 @@ async function startSend() {
     startBtn.disabled = false;
     startBtn.textContent = origBtnText;
     if (chunks.length > MAX_TOTAL_FRAMES) {
-      showToast(`フレーム数が多すぎます(${chunks.length}枚)。チャンクサイズを上げてください。`, 4000);
+      showToast(`Too many frames (${chunks.length}). Increase the chunk size.`, 4000);
       chunks = [];
       return;
     }
@@ -3312,7 +3313,7 @@ function stopSend() {
   const startBtn = document.getElementById('startBtn');
   startBtn.style.display = 'block';
   startBtn.disabled = fileData === null;
-  startBtn.textContent = '送信開始';
+  startBtn.textContent = 'Start';
   document.getElementById('stopBtn').style.display = 'none';
   document.getElementById('qrDisplay').classList.remove('active');
   // ファイルが読み込まれていればdropZoneは非表示のままfileInfoを表示
@@ -3344,7 +3345,7 @@ async function startRecv() {
   recvStarted = true;
 
   const btn = document.getElementById('recvBtn');
-  btn.textContent = '接続中...';
+  btn.textContent = 'Connecting...';
   btn.disabled = true;
 
   try {
@@ -3384,11 +3385,11 @@ async function startRecv() {
       }
       if (Object.keys(constraints2).length > 0) {
         await track.applyConstraints({ advanced: [constraints2] });
-        if (dbg) dbg.textContent = 'フォーカス固定: ' + JSON.stringify(constraints2);
+        if (dbg) dbg.textContent = 'Focus locked: ' + JSON.stringify(constraints2);
       }
     } catch(e) {
       const dbg = document.getElementById('scanDebug');
-      if (dbg) dbg.textContent = 'フォーカス設定不可: ' + e.message;
+      if (dbg) dbg.textContent = 'Focus unavailable: ' + e.message;
     }
 
     // ズーム・フォーカス制御
@@ -3421,15 +3422,15 @@ async function startRecv() {
     if (advanced.length > 0) {
       try { await track.applyConstraints({ advanced }); } catch(e) {}
     }
-    btn.textContent = 'スキャン中 📷';
+    btn.textContent = 'Scanning 📷';
     document.getElementById('stopRecvBtn').style.display = 'block';
     scanLoop();
   } catch(e) {
-    let msg = 'カメラエラー: ' + (e.name || e.message);
-    if (e.name === 'NotAllowedError') msg = 'カメラを許可してください（設定 → Safari → カメラ）';
-    if (e.name === 'NotFoundError') msg = 'カメラが見つかりません';
+    let msg = 'Camera error: ' + (e.name || e.message);
+    if (e.name === 'NotAllowedError') msg = 'Please allow camera access (Settings → Safari → Camera)';
+    if (e.name === 'NotFoundError') msg = 'No camera found';
     showToast(msg, 4000);
-    btn.textContent = 'カメラ開始（再試行）';
+    btn.textContent = 'Start Camera (retry)';
     btn.disabled = false;
     recvStarted = false;
   }
@@ -3452,10 +3453,10 @@ function scanLoop() {
       negotiatedFps = settings.frameRate.toFixed(0);
     } else {
       const caps = track?.getCapabilities ? track.getCapabilities() : null;
-      if (caps && caps.frameRate) negotiatedFps = `上限${caps.frameRate.max}(実測値は非対応)`;
+      if (caps && caps.frameRate) negotiatedFps = `max ${caps.frameRate.max} (live value unsupported)`;
     }
   }
-  if (dbg) dbg.textContent = `📷 jsQR スキャン中…（カメラ実測${negotiatedFps}fps）`;
+  if (dbg) dbg.textContent = `📷 Scanning…(camera ${negotiatedFps}fps)`;
 
   let scanCount = 0;
   let lastFpsTime = performance.now();
@@ -3473,7 +3474,7 @@ function scanLoop() {
       const t2 = performance.now();
       const code = jsQR(imgData.data, canvas.width, canvas.height, { inversionAttempts: 'dontInvert' });
       const t3 = performance.now();
-      if (dbg) dbg.textContent = `getImageData:${(t2-t1).toFixed(0)}ms jsQR:${(t3-t2).toFixed(0)}ms 解像度:${canvas.width}x${canvas.height} カメラ実測${negotiatedFps}fps`;
+      if (dbg) dbg.textContent = `getImageData:${(t2-t1).toFixed(0)}ms jsQR:${(t3-t2).toFixed(0)}ms res:${canvas.width}x${canvas.height} camera:${negotiatedFps}fps`;
       // code.dataはUTF-8としてデコードを試みるため生バイナリでは壊れる。
       // code.binaryDataから直接「1バイト=1文字」の文字列を組み立てる。
       if (code) processQR(String.fromCharCode.apply(null, code.binaryData));
@@ -3697,7 +3698,7 @@ function finalizeFountain() {
   for (let i = 0; i < recvTotal; i++) bin += recvChunks[i] || '';
   bin = bin.slice(0, recvFountainOrigSize);
   if (crc32(bin) !== recvFountainFileCrc) {
-    showToast('⚠️ 復元後のCRC不一致。データが壊れている可能性があります', 5000);
+    showToast('⚠️ CRC mismatch after reassembly — the data may be corrupted', 5000);
   }
   onComplete();
 }
@@ -3724,7 +3725,7 @@ function updateRecvStatus() {
     const el = document.getElementById('missingFrames');
     if (el) {
       if (missing.length > 0) {
-        el.textContent = '欠番: ' + (missing.length <= 20 ? missing.join(', ') : missing.slice(0,20).join(', ') + `… 他${missing.length-20}件`);
+        el.textContent = 'Missing: ' + (missing.length <= 20 ? missing.join(', ') : missing.slice(0,20).join(', ') + ` … +${missing.length-20} more`);
         el.style.display = 'block';
       } else {
         el.style.display = 'none';
@@ -3754,7 +3755,7 @@ function resetRecv() {
   recvCompressed = false;
   fountainPending = [];
 
-  document.getElementById('recvBtn').textContent = 'カメラ開始';
+  document.getElementById('recvBtn').textContent = 'Start Camera';
   document.getElementById('recvBtn').disabled = false;
   document.getElementById('recvBtn').style.display = 'block';
   document.getElementById('recvCompleteMsg').style.display = 'none';
@@ -3787,11 +3788,11 @@ function onComplete() {
     for (let i = 0; i < recvTotal; i++) bytes += (recvChunks[i] || '').length; // 1文字=1バイト（生バイナリ）
     if (elapsedSec > 0) {
       const kbps = bytes / 1024 / elapsedSec;
-      document.getElementById('recvSpeed').textContent = `${formatSize(bytes)} / ${elapsedSec.toFixed(1)}秒 (${kbps.toFixed(1)} KB/s)`;
-      speedSuffix = ` (${elapsedSec.toFixed(1)}秒, ${kbps.toFixed(1)} KB/s)`;
+      document.getElementById('recvSpeed').textContent = `${formatSize(bytes)} / ${elapsedSec.toFixed(1)}s (${kbps.toFixed(1)} KB/s)`;
+      speedSuffix = ` (${elapsedSec.toFixed(1)}s, ${kbps.toFixed(1)} KB/s)`;
     }
   }
-  showToast('✅ 受信完了！保存ボタンを押してください' + speedSuffix, 4000);
+  showToast('✅ Received! Tap Save File to store it.' + speedSuffix, 4000);
 }
 
 async function saveFile() {
@@ -3806,7 +3807,7 @@ async function saveFile() {
     try {
       bin = await gzipDecompress(bin);
     } catch (e) {
-      showToast('展開に失敗しました: ' + e.message);
+      showToast('Failed to decompress: ' + e.message);
       return;
     }
   }
@@ -3820,9 +3821,9 @@ async function saveFile() {
     a.download = recvFileName || 'received.kml';
     a.click();
     URL.revokeObjectURL(url);
-    showToast('💾 保存しました');
+    showToast('💾 Saved');
   } catch(e) {
-    showToast('保存に失敗しました: ' + e.message);
+    showToast('Failed to save: ' + e.message);
   }
 }
 
