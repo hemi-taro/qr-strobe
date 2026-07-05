@@ -1,0 +1,10 @@
+{
+  "name": "QR Strobe",
+  "short_name": "QR Strobe",
+  "description": "Offline file transfer via animated QR codes",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#0a0a0f"
+}
