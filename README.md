@@ -19,6 +19,21 @@ Offline, air-gapped file transfer between devices using animated QR codes (camer
 ### Install on iPhone
 Open the link above in Safari, tap Share → **Add to Home Screen**. Works offline once installed.
 
+## Fountain Mode
+
+By default, files are split into numbered chunks and sent in a fixed loop — the receiver waits for every chunk, including whichever one it missed last.
+
+Fountain mode instead sends an endless stream of randomly-combined chunks, so the receiver can reconstruct the file from *any* sufficiently large set of frames, in any order. No more waiting for one stubborn missed frame to loop back around. Useful for large or unreliable transfers; adds a small overhead in frame count.
+
+## Compression
+
+The "Compress" toggle gzips the file before sending, and previews how much it actually saves before you commit to it.
+
+- **Big win**: plain text — GPX, KML, CSV, JSON, logs
+- **No real benefit**: already-compressed formats — JPEG, PNG, MP4, ZIP, and also DOCX/XLSX/PPTX (these are ZIP containers internally, so they're already compressed)
+
+Check the preview; if it says compression makes the file bigger, leave it off.
+
 ## Disclaimer
 
 Use at your own risk.
